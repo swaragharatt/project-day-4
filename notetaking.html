@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Markdown Notes </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-light: #fcfbf9;
+      --bg-light-sidebar: #f7f3ee;
+      --bg-light-main: #ffffff;
+      --text-dark: #3a2f2f;
+      --accent-light: #b45233;
+
+      --bg-dark: #000000;
+      --bg-dark-sidebar: #210e41;
+      --bg-dark-main: #13082a;
+      --text-light: #c7c2db;
+      --accent-dark-border: #5a2e8a;
+
+      --sidebar-width: 260px;
+      --transition-speed: 0.4s;
+      --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+       Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      --border-radius: 12px;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    #sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-light-sidebar);
+      border-right: 3px solid var(--accent-light);
+      box-shadow: 0 0 10px rgb(180 82 51 / 0.15);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem;
+      transition: background var(--transition-speed), box-shadow var(--transition-speed), border-color var(--transition-speed);
+      user-select: none;
+    }
+
+    body.dark #sidebar {
+      background: var(--bg-dark-sidebar);
+      border-right: 3px solid var(--accent-dark-border);
+      box-shadow: 0 0 15px rgb(90 46 138 / 0.45);
+    }
+
+    #sidebar h1 {
+      text-align: center;
+      color: var(--accent-light);
+      font-weight: 700;
+      margin: 0 0 1rem 0;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      transition: color var(--transition-speed);
+      user-select: text;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body.dark #sidebar h1 {
+      color: var(--accent-dark-border);
+    }
+
+    #themeToggle {
+      background: none;
+      border: none;
+      color: var(--accent-light);
+      font-size: 1.8rem;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 1rem auto;
+      cursor: pointer;
+      transition: color var(--transition-speed);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    body.dark #themeToggle {
+      color: var(--accent-dark-border);
+    }
+
+    #addNoteBtn {
+      background: var(--accent-light);
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 0.7rem 1rem;
+      font-weight: 600;
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: background var(--transition-speed), box-shadow var(--transition-speed);
+      box-shadow: 0 4px 12px rgb(180 82 51 / 0.5);
+      text-align: center;
+      user-select: none;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body.dark #addNoteBtn {
+      background: var(--accent-dark-border);
+      box-shadow: 0 4px 15px rgb(90 46 138 / 0.75);
+      color: #ddd;
+    }
+
+    #addNoteBtn:hover {
+      background: #9a3f15;
+      box-shadow: 0 6px 18px rgb(180 82 51 / 0.9);
+    }
+
+    body.dark #addNoteBtn:hover {
+      background: #6e2383;
+      box-shadow: 0 6px 20px rgb(90 46 138 / 1);
+      color: #fff;
+    }
+
+    #noteList {
+      flex: 1;
+      overflow-y: auto;
+      border-radius: var(--border-radius);
+      border: 2px solid var(--accent-light);
+      box-shadow: 0 0 6px rgb(180 82 51 / 0.4);
+      padding: 0.3rem;
+      transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+      user-select: none;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+    }
+
+    body.dark #noteList {
+      border-color: var(--accent-dark-border);
+      box-shadow: 0 0 9px rgb(90 46 138 / 0.7);
+    }
+
+    .note {
+      background: transparent;
+      color: var(--accent-light);
+      padding: 0.75rem 1.2rem;
+      margin: 0.3rem 0;
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-radius: 8px;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+      user-select: none;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+    }
+
+    body.dark .note {
+      color: var(--accent-dark-border);
+    }
+
+    .note:hover {
+      background-color: rgb(180 82 51 / 0.15);
+      border-left: 4px solid var(--accent-light);
+    }
+
+    body.dark .note:hover {
+      background-color: rgb(90 46 138 / 0.15);
+      border-left: 4px solid var(--accent-dark-border);
+    }
+
+    .note.active {
+      background-color: rgb(180 82 51 / 0.28);
+      border-left: 6px solid var(--accent-light);
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    body.dark .note.active {
+      background-color: rgb(90 46 138 / 0.3);
+      border-left: 6px solid var(--accent-dark-border);
+      color: #ddd;
+    }
+
+    #main {
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-light-main);
+      border-radius: var(--border-radius);
+      margin: 1rem;
+      box-shadow: 0 0 20px rgb(180 82 51 / 0.3);
+      transition: background var(--transition-speed), box-shadow var(--transition-speed);
+      user-select: text;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body.dark #main {
+      background: var(--bg-dark-main);
+      box-shadow: 0 0 25px rgb(90 46 138 / 0.5);
+      color: var(--text-light);
+    }
+
+    #title {
+      background: #fff;
+      border: 2px solid var(--accent-light);
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 1.5rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: 8px 8px 0 0;
+      letter-spacing: 1px;
+      box-shadow: 0 0 8px rgb(180 82 51 / 0.4);
+      margin-bottom: 1rem;
+      transition: border-color var(--transition-speed), box-shadow var(--transition-speed), color var(--transition-speed), background var(--transition-speed);
+      outline: none;
+      user-select: text;
+    }
+
+    body.dark #title {
+      background: #1f143f;
+      border-color: var(--accent-dark-border);
+      color: var(--text-light);
+      box-shadow: 0 0 12px rgb(90 46 138 / 0.6);
+    }
+
+    #editor {
+      flex: 1;
+      background: #fff;
+      border-radius: 0 0 8px 8px;
+      border: 2px solid var(--accent-light);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.1rem;
+      padding: 1.2rem;
+      color: var(--text-dark);
+      resize: vertical;
+      box-shadow: 0 0 13px rgb(180 82 51 / 0.5);
+      margin-bottom: 1rem;
+      transition: border-color var(--transition-speed), box-shadow var(--transition-speed), color var(--transition-speed), background var(--transition-speed);
+      outline: none;
+      user-select: text;
+    }
+
+    body.dark #editor {
+      background: #1f143f;
+      border-color: var(--accent-dark-border);
+      color: var(--text-light);
+      box-shadow: 0 0 15px rgb(90 46 138 / 0.7);
+    }
+
+    #actions {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      user-select: none;
+    }
+
+    .actionBtn {
+      flex: 1;
+      padding: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: var(--font-family);
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      background: var(--accent-light);
+      box-shadow: 0 4px 12px rgb(180 82 51 / 0.6);
+      transition: background var(--transition-speed), box-shadow var(--transition-speed), color var(--transition-speed);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    body.dark .actionBtn {
+      background: var(--accent-dark-border);
+      color: #ddd;
+      box-shadow: 0 4px 16px rgb(90 46 138 / 0.8);
+    }
+
+    .actionBtn:hover {
+      background: #9a3f15;
+      box-shadow: 0 6px 18px rgb(180 82 51 / 0.85);
+      color: #fff;
+    }
+
+    body.dark .actionBtn:hover {
+      background: #6e2383;
+      box-shadow: 0 6px 20px rgb(90 46 138 / 1);
+      color: #fff;
+    }
+
+    .actionBtn.delete {
+      background: #903028;
+      box-shadow: 0 4px 12px rgb(144 48 40 / 0.8);
+    }
+
+    body.dark .actionBtn.delete {
+      background: #502860;
+      box-shadow: 0 4px 14px rgb(80 40 96 / 0.9);
+      color: #eee;
+    }
+
+    .actionBtn.delete:hover {
+      background: #580a00;
+      box-shadow: 0 6px 20px rgb(88 10 0 / 1);
+      color: #fff;
+    }
+
+    body.dark .actionBtn.delete:hover {
+      background: #36005f;
+      box-shadow: 0 6px 24px rgb(54 0 95 / 1);
+      color: #fff;
+    }
+
+    #preview {
+      flex: 1;
+      background: var(--bg-light-main);
+      border-radius: var(--border-radius);
+      border: 2px solid var(--accent-light);
+      padding: 1.25rem;
+      color: var(--text-dark);
+      font-size: 1.1rem;
+      overflow-y: auto;
+      box-shadow: 0 0 15px rgb(180 82 51 / 0.7);
+      white-space: pre-wrap;
+      user-select: text;
+      transition:
+        border-color var(--transition-speed),
+        box-shadow var(--transition-speed),
+        color var(--transition-speed),
+        background var(--transition-speed);
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    body.dark #preview {
+      background: var(--bg-dark-main);
+      border-color: var(--accent-dark-border);
+      color: var(--text-light);
+      box-shadow: 0 0 22px rgb(90 46 138 / 0.85);
+    }
+
+    /* Fix for Preview heading */
+    .previewHeading {
+      color: var(--accent-light);
+      margin-bottom: 0.5rem;
+      transition: color var(--transition-speed);
+    }
+
+    body.dark .previewHeading {
+      color: var(--accent-dark-border);
+    }
+
+    .fa-sun,
+    .fa-moon,
+    .fa-floppy-disk,
+    .fa-trash {
+      pointer-events: none;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        flex-direction: column;
+      }
+      #sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 3px solid var(--accent-light);
+        box-shadow: none;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0.75rem 0;
+      }
+
+      body.dark #sidebar {
+        border-bottom-color: var(--accent-dark-border);
+      }
+
+      #noteList {
+        flex: none;
+        max-height: 120px;
+        border-radius: var(--border-radius);
+        overflow-x: auto;
+        white-space: nowrap;
+        border: 2px solid var(--accent-light);
+        box-shadow: 0 0 10px rgb(180 82 51 / 0.5);
+      }
+
+      body.dark #noteList {
+        border-color: var(--accent-dark-border);
+        box-shadow: 0 0 12px rgb(90 46 138 / 0.7);
+      }
+
+      .note {
+        display: inline-block;
+        margin: 0 8px;
+        border-left: none;
+        border-bottom: 4px solid transparent;
+      }
+
+      .note.active {
+        border-left: none;
+        border-bottom: 4px solid var(--accent-light);
+        color: #fff;
+      }
+
+      body.dark .note.active {
+        border-bottom-color: var(--accent-dark-border);
+        color: #eee;
+      }
+
+      #main {
+        margin: 0;
+        padding: 1rem;
+        height: 70vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+    <h1>Markdown Notes</h1>
+    <button id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light theme">
+      <i class="fa-regular fa-moon"></i>
+    </button>
+    <button id="addNoteBtn">＋ Add Note</button>
+    <div id="noteList"></div>
+  </div>
+  <div id="main">
+    <input type="text" id="title" placeholder="Note Title" autocomplete="off" />
+    <textarea id="editor" placeholder="Type your markdown here..."></textarea>
+    <div id="actions">
+      <button class="actionBtn" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+      <button class="actionBtn delete" id="deleteBtn"><i class="fa-solid fa-trash"></i> Delete</button>
+    </div>
+    <h3 class="previewHeading">Preview</h3>
+    <div id="preview"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    let notes = [];
+    let activeId = null;
+
+    function loadNotes() {
+      notes = JSON.parse(localStorage.getItem('markdownNotes') || '[]');
+    }
+
+    function saveNotes() {
+      localStorage.setItem('markdownNotes', JSON.stringify(notes));
+    }
+
+    function renderList() {
+      const noteList = document.getElementById('noteList');
+      noteList.innerHTML = '';
+      notes.forEach(note => {
+        const div = document.createElement('div');
+        div.className = 'note' + (note.id === activeId ? ' active' : '');
+        div.textContent = note.title || 'Untitled';
+        div.onclick = () => setActiveNote(note.id);
+        noteList.appendChild(div);
+      });
+    }
+
+    function setActiveNote(id) {
+      activeId = id;
+      const note = notes.find(n => n.id === id);
+      if (note) {
+        document.getElementById('title').value = note.title;
+        document.getElementById('editor').value = note.content;
+      } else {
+        document.getElementById('title').value = '';
+        document.getElementById('editor').value = '';
+      }
+      renderPreview();
+      renderList();
+    }
+
+    function addNote() {
+      const id = Date.now();
+      const newNote = { id, title: 'Untitled', content: '' };
+      notes.push(newNote);
+      saveNotes();
+      setActiveNote(id);
+    }
+
+    function saveNote() {
+      if (!activeId) {
+        alert('No note selected to save!');
+        return;
+      }
+      const note = notes.find(n => n.id === activeId);
+      if (note) {
+        note.title = document.getElementById('title').value.trim() || 'Untitled';
+        note.content = document.getElementById('editor').value;
+        saveNotes();
+        renderList();
+        alert('Note saved!');
+      }
+    }
+
+    function deleteNote() {
+      if (!activeId) return alert('No note selected to delete!');
+      if (confirm('Delete this note?')) {
+        notes = notes.filter(n => n.id !== activeId);
+        activeId = null;
+        saveNotes();
+        setActiveNote(null);
+      }
+    }
+
+    function renderPreview() {
+      const content = document.getElementById('editor').value;
+      document.getElementById('preview').innerHTML = marked.parse(content);
+    }
+
+    document.getElementById('addNoteBtn').addEventListener('click', addNote);
+    document.getElementById('saveBtn').addEventListener('click', saveNote);
+    document.getElementById('deleteBtn').addEventListener('click', deleteNote);
+    document.getElementById('editor').addEventListener('input', renderPreview);
+
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const icon = themeToggle.querySelector('i');
+      if (document.body.classList.contains('dark')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
+    });
+
+    loadNotes();
+    renderList();
+    if (notes.length > 0) {
+      setActiveNote(notes[0].id);
+    }
+  </script>
+</body>
+</html>
